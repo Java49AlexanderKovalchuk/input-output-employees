@@ -17,7 +17,7 @@ public class TcpServer implements Runnable {
 		try {
 			while(true) {
 				Socket socket = serverSocket.accept();
-				TcpClientServer clientServer = new TcpClientServer(socket, protocol);
+				TcpClientServer1 clientServer = new TcpClientServer1(socket, protocol);
 				clientServer.run();
 			}
 			
