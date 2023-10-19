@@ -9,9 +9,10 @@ public class TcpClientServer1 implements Runnable {
 	ObjectOutputStream output;
 	ApplProtocol protocol;
 	TcpServer tcpServer;
-	final static int TOTAL_IDLE_TIMEOUT = 30000;
+	final static int TOTAL_IDLE_TIMEOUT=30000;
 	int idleTime = 0;
-	public TcpClientServer1(Socket socket, ApplProtocol protocol, TcpServer tcpServer) throws IOException {
+	public TcpClientServer1(Socket socket, ApplProtocol protocol,
+			TcpServer tcpServer) throws IOException {
 		this.socket = socket;
 		this.socket.setSoTimeout(TcpServer.IDLE_TIMEOUT);
 		input = new ObjectInputStream(socket.getInputStream());
@@ -30,12 +31,12 @@ public class TcpClientServer1 implements Runnable {
 				output.writeObject(response);
 				
 				} catch(SocketTimeoutException e) {
-					idleTime += TcpServer.IDLE_TIMEOUT; 
-					if(idleTime > TOTAL_IDLE_TIMEOUT && 
+					idleTime += TcpServer.IDLE_TIMEOUT;
+					if(idleTime > TOTAL_IDLE_TIMEOUT &&
 							tcpServer.clientsCounter.get() > tcpServer.nThreads) {
 						try {
 							socket.close();
-								
+							
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
@@ -45,7 +46,7 @@ public class TcpClientServer1 implements Runnable {
 					if(tcpServer.isShutdown) {
 						try {
 							socket.close();
-									
+							
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
@@ -58,13 +59,15 @@ public class TcpClientServer1 implements Runnable {
 					break;
 				} catch(Exception e) {
 					System.out.println("client closed abnormally connection "
-					+ e.getMessage());
+				+ e.getMessage());
 					break;
 				}
-			
-			
-			} 
+				
+				
+			}
 			tcpServer.clientsCounter.decrementAndGet();
+		
+
 	}
 
 }
