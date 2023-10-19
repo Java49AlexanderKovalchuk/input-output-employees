@@ -7,10 +7,13 @@ public class TcpHandler implements Closeable{
     private ObjectOutputStream output;
     private ObjectInputStream input;
     public TcpHandler(String host, int port) throws Exception {
-    	socket = new Socket(host, port);
+    	connect(host, port);
+    }
+	protected void connect(String host, int port) throws UnknownHostException, IOException {
+		socket = new Socket(host, port);
     	output = new ObjectOutputStream(socket.getOutputStream());
     	input = new ObjectInputStream(socket.getInputStream());
-    }
+	}
 	@Override
 	public void close() throws IOException {
 		socket.close();
