@@ -10,8 +10,8 @@ public class TcpServer implements Runnable {
 	private ApplProtocol protocol;
 	private ServerSocket serverSocket;
 	AtomicInteger clientsCounter = new AtomicInteger(0);
-	int nThreads = Runtime.getRuntime().availableProcessors();
-	//int nThreads = 2;
+	//int nThreads = Runtime.getRuntime().availableProcessors();
+	int nThreads = 2;
 	ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
 	boolean isShutdown = false;
 	public TcpServer(int port, ApplProtocol protocol) throws IOException {

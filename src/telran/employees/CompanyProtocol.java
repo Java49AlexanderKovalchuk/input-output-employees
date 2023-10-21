@@ -30,25 +30,10 @@ public class CompanyProtocol implements ApplProtocol {
 		try {
 			
 			method = clazz.getDeclaredMethod(requestType.replace("/", "_"), Serializable.class);
-		//	method.setAccessible(true);
+		
 			Serializable responseData = (Serializable) method.invoke(this, data);
 			
-//			Serializable responseData = switch(requestType) {
-//			case "employee/add" -> employee_add(data);
-//			case "employee/get" -> employee_get(data);
-//			case "employees/get" -> employees_get(data);
-//			case "department/update" -> department_update(data);
-//			case "salary/update" -> salary_update(data);
-//			case "employee/remove" -> employee_remove(data);
-//			case "department/salary/distribution" -> department_salary_distribution(data);
-//			case "salary/distribution" -> salary_distribution(data);
-//			case "employees/department" -> employees_department(data);
-//			case "employees/salary" -> employees_salary(data);
-//			case "employees/age" -> employees_age(data);
-//			
-//			    default -> new Response(ResponseCode.WRONG_TYPE, requestType +
-//			    		" is unsupported in the Company Protocol");
-//			};
+
 			response = (responseData instanceof Response) ? 
 					(Response) responseData :
 				new Response(ResponseCode.OK, responseData);
