@@ -1,19 +1,18 @@
 package telran.employees;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import telran.employees.dto.*;
 import telran.employees.service.Company;
 import telran.net.*;
-
+@SuppressWarnings("unused")
 public class CompanyProtocol implements ApplProtocol {
 
 	private Company company;
-	Class<?> clazz;
-	private Method method;
-	
+		
 	public CompanyProtocol(Company company) {
 		this.company = company;
 		
@@ -23,32 +22,32 @@ public class CompanyProtocol implements ApplProtocol {
 	public Response getResponse(Request request) {
 		
 		Response response = null;
-		String requestType = request.requestType();
+		String requestType = request. requestType();
 		Serializable data = request.requestData();
-		clazz = this.getClass();					
-			
+					
 		try {
+			requestType = requestType.replace('/', '_');
+			Method method = this.getClass().getDeclaredMethod(requestType, Serializable.class);
+			Serializable responceData = (Serializable) method.invoke(this, data);
+			response = new Response(ResponseCode.OK, responceData);
 			
-			method = clazz.getDeclaredMethod(requestType.replace("/", "_"), Serializable.class);
-		
-			Serializable responseData = (Serializable) method.invoke(this, data);
-			
-
-			response = (responseData instanceof Response) ? 
-					(Response) responseData :
-				new Response(ResponseCode.OK, responseData);
-			
-		} 
-		catch (NoSuchMethodException e) {
+		} catch(NoSuchMethodException e) {
 			new Response(ResponseCode.WRONG_TYPE, requestType +
 	    		" is unsupported in the Company Protocol");
-		} catch(Exception e) {
+		} catch(InvocationTargetException e) {
+			Throwable ce = e.getCause();
+			String errorMessage = ce instanceof ClassCastException ? 
+					"Mismatching of received  data type" : ce.getMessage(); 
+			response = new Response(ResponseCode.WRONG_DATA, errorMessage);
+		} catch (Exception e) {
 			response = new Response(ResponseCode.WRONG_DATA, e.toString());
-		}
+			
+		} 
 		return response;
 	}
 
-	 private Serializable employees_age(Serializable data) {
+	
+	private Serializable employees_age(Serializable data) {
 		FromTo fromTo = (FromTo) data;
 		int ageFrom = fromTo.from();
 		int ageTo = fromTo.to();
